@@ -10,6 +10,5 @@ namespace Application.Interfaces
         Categoria Cadastrar(CategoriaDto produto);
         Categoria Buscar(int categoriaId);
         Categoria Deletar(int categoriaId);
-
     }
 }

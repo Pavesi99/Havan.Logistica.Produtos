@@ -5,9 +5,6 @@ using Domain.Interfaces.NomeDaBase;
 using Domain.Interfaces.Uow;
 using Domain.Models;
 using Infra.CrossCutting.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Application.Services
 {
@@ -16,8 +13,6 @@ namespace Application.Services
         private readonly ICategoriaRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _uow;
-
-
         public CategoriaAppService(ICategoriaRepository repository, IMapper mapper,  IUnitOfWork uow)
         {
             _repository = repository;

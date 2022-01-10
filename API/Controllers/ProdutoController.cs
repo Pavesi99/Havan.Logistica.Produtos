@@ -1,21 +1,19 @@
 ﻿using Application.Interfaces;
-using Havan.Logistica.Core.Controller;
-using Havan.Logistica.Core.Notifications;
 using Infra.CrossCutting.Dto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace API.Controllers
 {
     [Route("Produto")]
     [ApiController]
-    public class ProdutoController : MainController
+    public class ProdutoController : ControllerBase
     {
         private readonly IProdutoAppService _appService;
 
-        public ProdutoController(INotifier notifier, IProdutoAppService appService) : base(notifier)
+        public ProdutoController( IProdutoAppService appService) 
         {
             _appService = appService;
         }
@@ -25,12 +23,11 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Buscar(produtoId));
+                return Ok(_appService.Buscar(produtoId));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -39,12 +36,11 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Deletar(produtoId));
+                return Ok(_appService.Deletar(produtoId));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -54,12 +50,11 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Cadastrar(produto));
+                return Ok(_appService.Cadastrar(produto));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 

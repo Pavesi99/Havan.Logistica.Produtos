@@ -1,36 +1,35 @@
 ﻿using Application.Interfaces;
-using Havan.Logistica.Core.Controller;
-using Havan.Logistica.Core.Notifications;
+using Domain.Models;
 using Infra.CrossCutting.Dto;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
+using System.Net;
 
 namespace API.Controllers
 {
     [Route("Categoria")]
     [ApiController]
-    public class CategoriaController : MainController
+    public class CategoriaController : ControllerBase
     {
         private readonly ICategoriaAppService _appService;
 
-        public CategoriaController(INotifier notifier, ICategoriaAppService appService) : base(notifier)
+        public CategoriaController( ICategoriaAppService appService) 
         {
             _appService = appService;
         }
 
         [HttpGet, Route("{categoriaId}")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Categoria))]
         public IActionResult Consultar([FromRoute] int categoriaId)
         {
             try
             {
-                return Response(_appService.Buscar(categoriaId));
+                return Ok(_appService.Buscar(categoriaId));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                return Problem(e.InnerException?.Message ?? e.Message,null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -39,12 +38,11 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Deletar(categoriaId));
+                return Ok(_appService.Deletar(categoriaId));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -54,12 +52,11 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Cadastrar(categoria));
+                return Ok(_appService.Cadastrar(categoria));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

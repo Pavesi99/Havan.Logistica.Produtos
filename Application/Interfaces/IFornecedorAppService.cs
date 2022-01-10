@@ -10,6 +10,5 @@ namespace Application.Interfaces
         Fornecedor Cadastrar(FornecedorDto fornecedor);
         Fornecedor Buscar(int fornecedorId);
         Fornecedor Deletar(int fornecedorId);
-
     }
 }

@@ -12,9 +12,7 @@ namespace Integration
 {
     public class ProdutoMessageHandler
     {
-    
-
-         public void Publish(CatalogoProdutosMessage produto)
+        public void Publish(CatalogoProdutosMessage produto)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
