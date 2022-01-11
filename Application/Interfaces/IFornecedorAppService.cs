@@ -8,6 +8,7 @@ namespace Application.Interfaces
     public interface IFornecedorAppService
     {
         Fornecedor Cadastrar(FornecedorDto fornecedor);
+        Fornecedor Atualizar(FornecedorDto fornecedor);
         Fornecedor Buscar(int fornecedorId);
         Fornecedor Deletar(int fornecedorId);
     }

@@ -3,7 +3,6 @@ using Infra.CrossCutting.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Net;
 
 namespace API.Controllers
@@ -45,6 +44,18 @@ namespace API.Controllers
             }
         }
 
+        [HttpPut, Route("")]
+        public IActionResult Atualizar([FromBody] FornecedorDto fornecedor)
+        {
+            try
+            {
+                return Ok(_appService.Atualizar(fornecedor));
+            }
+            catch (Exception e)
+            {
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+            }
+        }
 
         [HttpPost, Route("")]
         public IActionResult Cadastrar([FromBody] FornecedorDto fornecedor)

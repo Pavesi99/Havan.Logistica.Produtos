@@ -19,12 +19,8 @@ namespace API
         {
             Configuration = configuration;
         }
-        public IConfiguration Configuration { get; }
 
-        private static void ConfigureJson(MvcNewtonsoftJsonOptions options)
-        {
-            options.UseCamelCasing(true);
-        }
+        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -59,6 +55,7 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

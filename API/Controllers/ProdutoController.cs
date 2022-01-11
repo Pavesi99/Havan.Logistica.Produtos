@@ -12,7 +12,6 @@ namespace API.Controllers
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoAppService _appService;
-
         public ProdutoController( IProdutoAppService appService) 
         {
             _appService = appService;
@@ -44,6 +43,18 @@ namespace API.Controllers
             }
         }
 
+        [HttpPut, Route("")]
+        public IActionResult Atualizar([FromBody] ProdutoDto produto)
+        {
+            try
+            {
+                return Ok(_appService.Atualizar(produto));
+            }
+            catch (Exception e)
+            {
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+            }
+        }
 
         [HttpPost, Route("")]
         public IActionResult Cadastrar([FromBody] ProdutoDto produto)
@@ -57,7 +68,5 @@ namespace API.Controllers
                 return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
-
-        
     }
 }

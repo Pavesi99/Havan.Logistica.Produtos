@@ -1,8 +1,10 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
 using Domain.Enum;
-using Domain.Interfaces.NomeDaBase;
+using Domain.Interfaces.Integration;
+using Domain.Interfaces.Produto;
 using Domain.Interfaces.Uow;
+using Domain.Message;
 using Domain.Models;
 using Infra.CrossCutting.Dto;
 using Integration;
@@ -17,13 +19,20 @@ namespace Application.Services
         private readonly IProdutoRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _uow;
+        private readonly IProdutoMessageHandler _produtoMessageHandler;
 
-
-        public ProdutoAppService(IProdutoRepository repository, IMapper mapper, IUnitOfWork uow)
+        public ProdutoAppService(IProdutoRepository repository, IMapper mapper, IUnitOfWork uow, IProdutoMessageHandler produtoMessageHandler)
         {
             _uow = uow;
             _repository = repository;
             _mapper = mapper;
+            _produtoMessageHandler = produtoMessageHandler;
+        }
+
+        private void IntegrarProdutoCatalogo(Produto produto)
+        {
+            if (produto.Tipo == (int)TipoProduto.Acabado)
+                _produtoMessageHandler.Publish(_mapper.Map<Produto, CatalogoProdutosMessage>(produto));
         }
 
         public Produto Buscar(int fornecedorId)
@@ -34,15 +43,9 @@ namespace Application.Services
         public Produto Cadastrar(ProdutoDto produtoDto)
         {
             Produto produto = _mapper.Map<ProdutoDto, Produto>(produtoDto);
-            if (produto != null)
-            {
-                produto = _repository.Cadastrar(produto);
-
-                if (produto.Tipo == (int)TipoProduto.Acabado)
-                    new ProdutoMessageHandler().Publish(_mapper.Map<Produto, CatalogoProdutosMessage>(produto));
-
-                _uow.ProdutoUnitOfWork.Commit();
-            }
+            produto = _repository.Cadastrar(produto);
+            this.IntegrarProdutoCatalogo(produto);
+            _uow.ProdutoUnitOfWork.Commit();
 
             return produto;
         }
@@ -51,6 +54,16 @@ namespace Application.Services
         {
             var produto = _repository.Deletar(produtoId);
             _uow.ProdutoUnitOfWork.Commit();
+            return produto;
+        }
+
+        public Produto Atualizar(ProdutoDto produtoDto)
+        {
+            Produto produto = _mapper.Map<ProdutoDto, Produto>(produtoDto);
+            produto = _repository.Atualizar(produto);
+            this.IntegrarProdutoCatalogo(produto);
+            _uow.ProdutoUnitOfWork.Commit();
+
             return produto;
         }
     }

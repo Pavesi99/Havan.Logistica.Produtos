@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Message;
 using Domain.Models;
 using Infra.CrossCutting.Dto;
 using Integration;

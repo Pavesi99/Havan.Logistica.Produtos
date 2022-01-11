@@ -11,8 +11,6 @@ namespace Infra.Data.Uow
         private readonly TContext _context;
         private IDbContextTransaction _transaction;
         private ILogger _logger;
-
-
         public UnitOfWorkBase(ILogger<TContext> logger, TContext context)
         {
             _logger = logger;
@@ -84,10 +82,7 @@ namespace Infra.Data.Uow
             }
             catch (Exception e)
             {
-                if (e.InnerException.ToString().Contains("uk_produto_codigo"))
-                    _logger.LogError("Falha ao salvar produto!. O produto pode ter sido lido por outra pessoa.Por favor, tente novamente.");
-                else
-                    _logger.LogError(e.InnerException?.Message ?? e.Message);
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
                 return false;
             }
         }

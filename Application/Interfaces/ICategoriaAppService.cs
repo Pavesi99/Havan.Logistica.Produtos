@@ -7,7 +7,8 @@ namespace Application.Interfaces
 {
     public interface ICategoriaAppService
     {
-        Categoria Cadastrar(CategoriaDto produto);
+        Categoria Cadastrar(CategoriaDto categoria);
+        Categoria Atualizar(CategoriaDto categoria);
         Categoria Buscar(int categoriaId);
         Categoria Deletar(int categoriaId);
     }

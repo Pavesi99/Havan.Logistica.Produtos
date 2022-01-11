@@ -20,7 +20,6 @@ namespace API.Controllers
         }
 
         [HttpGet, Route("{categoriaId}")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Categoria))]
         public IActionResult Consultar([FromRoute] int categoriaId)
         {
             try
@@ -46,6 +45,18 @@ namespace API.Controllers
             }
         }
 
+        [HttpPut, Route("")]
+        public IActionResult Atualiziar([FromBody] CategoriaDto categoria)
+        {
+            try
+            {
+                return Ok(_appService.Atualizar(categoria));
+            }
+            catch (Exception e)
+            {
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+            }
+        }
 
         [HttpPost, Route("")]
         public IActionResult Cadastrar([FromBody] CategoriaDto categoria)

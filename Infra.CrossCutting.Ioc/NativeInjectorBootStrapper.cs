@@ -1,13 +1,16 @@
 ﻿using Application.Interfaces;
 using Application.Services;
-using Domain.Interfaces.NomeDaBase;
+using Domain.Interfaces.Integration;
+using Domain.Interfaces.Produto;
 using Domain.Interfaces.Uow;
 using Infra.Data.Context;
 using Infra.Data.Repositories.ItlSys;
 using Infra.Data.Uow;
+using Integration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
 
 namespace Infra.CrossCutting.Ioc
 {
@@ -15,6 +18,10 @@ namespace Infra.CrossCutting.Ioc
     {
         public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
+            //MensageHandler
+            services.AddScoped<IProdutoMessageHandler, ProdutoMessageHandler>();
+            services.AddScoped<IConnectionFactory, ConnectionFactory>();
+
             //AppService
             services.AddScoped<ICategoriaAppService, CategoriaAppService>();
             services.AddScoped<IProdutoAppService, ProdutoAppService>();

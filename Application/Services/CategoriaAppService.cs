@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
 using Domain.Enum;
-using Domain.Interfaces.NomeDaBase;
+using Domain.Interfaces.Produto;
 using Domain.Interfaces.Uow;
 using Domain.Models;
 using Infra.CrossCutting.Dto;
@@ -20,16 +20,23 @@ namespace Application.Services
             _uow = uow;
         }
 
+        public Categoria Atualizar(CategoriaDto categoriaDto)
+        {
+            Categoria categoria = _mapper.Map<CategoriaDto, Categoria>(categoriaDto);
+            categoria = _repository.Atualizar(categoria);
+            _uow.ProdutoUnitOfWork.Commit();
+            return categoria;
+        }
+
         public Categoria Buscar(int categoriaId)
         {
             return _repository.Buscar(categoriaId);
         }
 
-        public Categoria Cadastrar(CategoriaDto CategoriaDto)
+        public Categoria Cadastrar(CategoriaDto categoriaDto)
         {
-            Categoria categoria = _mapper.Map<CategoriaDto, Categoria>(CategoriaDto);
-            _repository.Cadastrar(categoria);
-
+            Categoria categoria = _mapper.Map<CategoriaDto, Categoria>(categoriaDto);
+            categoria = _repository.Cadastrar(categoria);
             _uow.ProdutoUnitOfWork.Commit();
             return categoria;
         }
