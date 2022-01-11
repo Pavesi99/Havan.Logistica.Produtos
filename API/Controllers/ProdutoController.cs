@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Infra.CrossCutting.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -12,9 +13,12 @@ namespace API.Controllers
     public class ProdutoController : ControllerBase
     {
         private readonly IProdutoAppService _appService;
-        public ProdutoController( IProdutoAppService appService) 
+        private readonly ILogger<ProdutoController> _logger;
+
+        public ProdutoController( IProdutoAppService appService, ILogger<ProdutoController> logger) 
         {
             _appService = appService;
+            _logger = logger;
         }
 
         [HttpGet, Route("{produtoId}")]
@@ -39,7 +43,8 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -52,7 +57,8 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -65,7 +71,8 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

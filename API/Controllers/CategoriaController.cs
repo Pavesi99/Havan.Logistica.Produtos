@@ -3,6 +3,7 @@ using Domain.Models;
 using Infra.CrossCutting.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 
@@ -13,9 +14,10 @@ namespace API.Controllers
     public class CategoriaController : ControllerBase
     {
         private readonly ICategoriaAppService _appService;
-
-        public CategoriaController( ICategoriaAppService appService) 
+        private readonly ILogger<CategoriaController> _logger;
+        public CategoriaController(ILogger<CategoriaController> logger, ICategoriaAppService appService) 
         {
+            _logger = logger;
             _appService = appService;
         }
 
@@ -28,7 +30,8 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return Problem(e.InnerException?.Message ?? e.Message,null, (int)HttpStatusCode.InternalServerError);
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(null,null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -41,7 +44,8 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -54,7 +58,8 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -67,7 +72,8 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
             }
         }
     }
