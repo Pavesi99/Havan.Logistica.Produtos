@@ -6,7 +6,7 @@ namespace Domain.Interfaces.Produto
     {
         Categoria Cadastrar(Categoria produto);
         Categoria Atualizar(Categoria produto);
-        Categoria Buscar(int categoriaId);
-        Categoria Deletar(int categoriaId);
+        Categoria Buscar(int categoriaCodigo);
+        Categoria Deletar(int categoriaCodigo);
     }
 }

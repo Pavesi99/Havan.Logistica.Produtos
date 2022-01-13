@@ -26,7 +26,13 @@ namespace Application.Services
         public Fornecedor Atualizar(FornecedorDto fornecedorDto)
         {
             Fornecedor fornecedor = _mapper.Map<FornecedorDto, Fornecedor>(fornecedorDto);
-            fornecedor = _repository.Atualizar(fornecedor);
+            Fornecedor fornecedorDb = _repository.Buscar(fornecedor.Codigo);
+
+            if (fornecedorDb == null)
+                throw new Exception("Não é possivel atualizar o fornecedor pois ele não existe.");
+
+            fornecedorDb.AtualizarDados(fornecedor.Codigo, fornecedor.Nome);
+            fornecedor = _repository.Atualizar(fornecedorDb);
             _uow.ProdutoUnitOfWork.Commit();
             return fornecedor;
         }
@@ -39,7 +45,13 @@ namespace Application.Services
         public Fornecedor Cadastrar(FornecedorDto fornecedorDto)
         {
             Fornecedor fornecedor = _mapper.Map<FornecedorDto, Fornecedor>(fornecedorDto);
-            fornecedor =_repository.Cadastrar(fornecedor);
+            Fornecedor fornecedorDb = _repository.Buscar(fornecedor.Codigo);
+
+            if (fornecedorDb != null)
+                throw new Exception("Não é possivel cadastrar o fornecedor pois ele já existe.");
+
+            fornecedorDb.AtualizarDados(fornecedor.Codigo, fornecedor.Nome);
+            fornecedor = _repository.Cadastrar(fornecedor);
             _uow.ProdutoUnitOfWork.Commit();
             return fornecedor;
         }

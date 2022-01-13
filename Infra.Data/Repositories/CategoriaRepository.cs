@@ -23,14 +23,14 @@ namespace Infra.Data.Repositories.ItlSys
             return categoria;
         }
 
-        public Categoria Buscar(int categoriaId)
+        public Categoria Buscar(int CategoriaCodigo)
         {
-            return _dbSet.FirstOrDefaultAsync(x => x.Codigo == categoriaId).Result;
+            return _dbSet.FirstOrDefaultAsync(x => x.Codigo == CategoriaCodigo).Result;
         }
 
-        public Categoria Deletar(int categoriaId)
+        public Categoria Deletar(int categoriaCodigo)
         {
-            Categoria categoria = this.Buscar(categoriaId);
+            Categoria categoria = this.Buscar(categoriaCodigo);
             this.Remove(categoria);
             return categoria;
         }

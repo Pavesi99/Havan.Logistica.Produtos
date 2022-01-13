@@ -31,7 +31,7 @@ namespace API.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.InnerException?.Message ?? e.Message);
-                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -45,7 +45,7 @@ namespace API.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.InnerException?.Message ?? e.Message);
-                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -59,7 +59,7 @@ namespace API.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.InnerException?.Message ?? e.Message);
-                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -73,7 +73,7 @@ namespace API.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.InnerException?.Message ?? e.Message);
-                return Problem(null, null, (int)HttpStatusCode.InternalServerError);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

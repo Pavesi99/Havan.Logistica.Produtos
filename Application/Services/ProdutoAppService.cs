@@ -43,6 +43,13 @@ namespace Application.Services
         public Produto Cadastrar(ProdutoDto produtoDto)
         {
             Produto produto = _mapper.Map<ProdutoDto, Produto>(produtoDto);
+
+            var produtoDb = _repository.Buscar(produto.Codigo);
+            if (produtoDb != null)
+            {
+                throw new Exception("Não é possivel cadastrar o produto pois ele já existe.");
+            }
+
             produto = _repository.Cadastrar(produto);
             this.IntegrarProdutoCatalogo(produto);
             _uow.ProdutoUnitOfWork.Commit();
@@ -60,7 +67,15 @@ namespace Application.Services
         public Produto Atualizar(ProdutoDto produtoDto)
         {
             Produto produto = _mapper.Map<ProdutoDto, Produto>(produtoDto);
-            produto = _repository.Atualizar(produto);
+            var produtoDb = _repository.Buscar(produto.Codigo);
+
+            if (produtoDb == null)
+            {
+                 throw new Exception("Não é possivel atualizar o produto pois ele não existe.");
+            }
+
+            produtoDb.AtualizarDados(produto.Codigo, produto.Descricao, produto.Categoria, produto.Tipo, produto.PrecoCusto, produto.PrecoVenda, produto.Fornecedor);
+            produto = _repository.Atualizar(produtoDb);
             this.IntegrarProdutoCatalogo(produto);
             _uow.ProdutoUnitOfWork.Commit();
 

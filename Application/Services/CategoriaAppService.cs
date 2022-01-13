@@ -5,6 +5,7 @@ using Domain.Interfaces.Produto;
 using Domain.Interfaces.Uow;
 using Domain.Models;
 using Infra.CrossCutting.Dto;
+using System;
 
 namespace Application.Services
 {
@@ -23,7 +24,13 @@ namespace Application.Services
         public Categoria Atualizar(CategoriaDto categoriaDto)
         {
             Categoria categoria = _mapper.Map<CategoriaDto, Categoria>(categoriaDto);
-            categoria = _repository.Atualizar(categoria);
+            Categoria categoriaDb = _repository.Buscar(categoria.Codigo);
+
+            if (categoriaDb == null)
+                throw new Exception("Não é possivel atualizar a categoria pois ela não existe.");
+
+            categoriaDb.AtualizarDados(categoria.Codigo, categoria.Nome);
+            categoria = _repository.Atualizar(categoriaDb);
             _uow.ProdutoUnitOfWork.Commit();
             return categoria;
         }
@@ -36,6 +43,11 @@ namespace Application.Services
         public Categoria Cadastrar(CategoriaDto categoriaDto)
         {
             Categoria categoria = _mapper.Map<CategoriaDto, Categoria>(categoriaDto);
+
+            Categoria categoriaDb = _repository.Buscar(categoria.Codigo);
+            if (categoriaDb != null)
+                throw new Exception("Não é possivel cadastrar a categoria pois ela já existe.");
+
             categoria = _repository.Cadastrar(categoria);
             _uow.ProdutoUnitOfWork.Commit();
             return categoria;
