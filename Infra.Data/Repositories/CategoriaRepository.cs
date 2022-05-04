@@ -1,5 +1,5 @@
 ﻿using Domain.Enum;
-using Domain.Interfaces.NomeDaBase;
+using Domain.Interfaces.Produto;
 using Infra.CrossCutting.Dto;
 using Infra.Data.Config;
 using Microsoft.Extensions.Options;
@@ -13,33 +13,31 @@ namespace Infra.Data.Repositories.ItlSys
 {
     public class CategoriaRepository : Repository<Categoria>, ICategoriaRepository
     {
-        public CategoriaRepository( ProdutoContext context) : base(context)
+        public CategoriaRepository(ProdutoContext context) : base(context)
         {
         }
 
         public Categoria Cadastrar(Categoria categoria)
         {
-            var categoriaDb = this.Buscar(categoria.Codigo);
-            if (categoriaDb == null)
-            {
-                this.Add(categoria);
-            }else
-            {
-                categoriaDb.AtualizarDados(categoriaDb.Codigo, categoria.Nome);
-                this.Update(categoriaDb);
-            }
+            this.Add(categoria);
             return categoria;
         }
 
-        public Categoria Buscar(int categoriaId)
+        public Categoria Buscar(int CategoriaCodigo)
         {
-            return  _dbSet.FirstOrDefaultAsync(x => x.Codigo == categoriaId).Result;
+            return _dbSet.FirstOrDefaultAsync(x => x.Codigo == CategoriaCodigo).Result;
         }
 
-        public Categoria Deletar(int categoriaId)
+        public Categoria Deletar(int categoriaCodigo)
         {
-            Categoria categoria = this.Buscar(categoriaId);
+            Categoria categoria = this.Buscar(categoriaCodigo);
             this.Remove(categoria);
+            return categoria;
+        }
+
+        public Categoria Atualizar(Categoria categoria)
+        {
+            this.Update(categoria);
             return categoria;
         }
     }

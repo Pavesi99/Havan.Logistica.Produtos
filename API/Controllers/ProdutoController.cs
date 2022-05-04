@@ -1,23 +1,24 @@
 ﻿using Application.Interfaces;
-using Havan.Logistica.Core.Controller;
-using Havan.Logistica.Core.Notifications;
 using Infra.CrossCutting.Dto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace API.Controllers
 {
     [Route("Produto")]
     [ApiController]
-    public class ProdutoController : MainController
+    public class ProdutoController : ControllerBase
     {
         private readonly IProdutoAppService _appService;
+        private readonly ILogger<ProdutoController> _logger;
 
-        public ProdutoController(INotifier notifier, IProdutoAppService appService) : base(notifier)
+        public ProdutoController( IProdutoAppService appService, ILogger<ProdutoController> logger) 
         {
             _appService = appService;
+            _logger = logger;
         }
 
         [HttpGet, Route("{produtoId}")]
@@ -25,12 +26,12 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Buscar(produtoId));
+                return Ok(_appService.Buscar(produtoId));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -39,30 +40,41 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Deletar(produtoId));
+                return Ok(_appService.Deletar(produtoId));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
+        [HttpPut, Route("")]
+        public IActionResult Atualizar([FromBody] ProdutoDto produto)
+        {
+            try
+            {
+                return Ok(_appService.Atualizar(produto));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+            }
+        }
 
         [HttpPost, Route("")]
         public IActionResult Cadastrar([FromBody] ProdutoDto produto)
         {
             try
             {
-                return Response(_appService.Cadastrar(produto));
+                return Ok(_appService.Cadastrar(produto));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
-
-        
     }
 }

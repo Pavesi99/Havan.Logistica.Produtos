@@ -1,23 +1,23 @@
-﻿using Domain.Models;
-using Infra.CrossCutting.Dto;
+﻿using Domain.Interfaces.Integration;
+using Domain.Message;
+using Domain.Models;
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Integration
 {
-    public class ProdutoMessageHandler
-    {
-    
-
-         public void Publish(CatalogoProdutosMessage produto)
+    public class ProdutoMessageHandler : IProdutoMessageHandler
+    { 
+        private readonly IConnectionFactory   _factory;
+        public ProdutoMessageHandler(IConnectionFactory factory)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
+            _factory = factory;
+        }
+
+        public void Publish(CatalogoProdutosMessage produto)
+        {
+            using (var connection = _factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue: "catalogoProduto", durable: false, exclusive: false, autoDelete: false, arguments: null);

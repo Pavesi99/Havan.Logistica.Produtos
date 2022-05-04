@@ -1,16 +1,12 @@
-﻿using Domain.Enum;
-using Domain.Models;
-using Havan.Logistica.Core.Repository;
-using Infra.CrossCutting.Dto;
-using System;
-using System.Collections.Generic;
+﻿using Domain.Models;
 
-namespace Domain.Interfaces.NomeDaBase
+namespace Domain.Interfaces.Produto
 {
     public interface ICategoriaRepository : IRepository<Categoria>
     {
         Categoria Cadastrar(Categoria produto);
-        Categoria Buscar(int categoriaId);
-        Categoria Deletar(int categoriaId);
+        Categoria Atualizar(Categoria produto);
+        Categoria Buscar(int categoriaCodigo);
+        Categoria Deletar(int categoriaCodigo);
     }
 }

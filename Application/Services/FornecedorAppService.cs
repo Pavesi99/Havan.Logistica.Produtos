@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
 using Domain.Enum;
-using Domain.Interfaces.NomeDaBase;
+using Domain.Interfaces.Produto;
 using Domain.Interfaces.Uow;
 using Domain.Models;
 using Infra.CrossCutting.Dto;
@@ -22,16 +22,36 @@ namespace Application.Services
             _repository = repository;
             _mapper = mapper;
         }
+
+        public Fornecedor Atualizar(FornecedorDto fornecedorDto)
+        {
+            Fornecedor fornecedor = _mapper.Map<FornecedorDto, Fornecedor>(fornecedorDto);
+            Fornecedor fornecedorDb = _repository.Buscar(fornecedor.Codigo);
+
+            if (fornecedorDb == null)
+                throw new Exception("Não é possivel atualizar o fornecedor pois ele não existe.");
+
+            fornecedorDb.AtualizarDados(fornecedor.Codigo, fornecedor.Nome);
+            fornecedor = _repository.Atualizar(fornecedorDb);
+            _uow.ProdutoUnitOfWork.Commit();
+            return fornecedor;
+        }
+
         public Fornecedor Buscar(int fornecedorId)
         {
             return _repository.Buscar(fornecedorId);
         }
 
-        public Fornecedor Cadastrar(FornecedorDto FornecedorDto)
+        public Fornecedor Cadastrar(FornecedorDto fornecedorDto)
         {
-            Fornecedor fornecedor = _mapper.Map<FornecedorDto, Fornecedor>(FornecedorDto);
-            _repository.Cadastrar(fornecedor);
-            
+            Fornecedor fornecedor = _mapper.Map<FornecedorDto, Fornecedor>(fornecedorDto);
+            Fornecedor fornecedorDb = _repository.Buscar(fornecedor.Codigo);
+
+            if (fornecedorDb != null)
+                throw new Exception("Não é possivel cadastrar o fornecedor pois ele já existe.");
+
+            fornecedorDb.AtualizarDados(fornecedor.Codigo, fornecedor.Nome);
+            fornecedor = _repository.Cadastrar(fornecedor);
             _uow.ProdutoUnitOfWork.Commit();
             return fornecedor;
         }

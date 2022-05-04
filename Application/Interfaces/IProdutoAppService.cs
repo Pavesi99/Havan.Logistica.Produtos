@@ -8,6 +8,7 @@ namespace Application.Interfaces
     public interface IProdutoAppService
     {
         Produto Cadastrar(ProdutoDto produto);
+        Produto Atualizar(ProdutoDto produto);
         Produto Buscar(int fornecedorId);
         Produto Deletar(int fornecedorId);
     }

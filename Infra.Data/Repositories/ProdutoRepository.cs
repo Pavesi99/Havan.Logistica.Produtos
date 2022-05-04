@@ -1,11 +1,5 @@
-﻿using Domain.Enum;
-using Domain.Interfaces.NomeDaBase;
-using Infra.CrossCutting.Dto;
-using Infra.Data.Config;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
+﻿using Domain.Interfaces.Produto;
 using Infra.Data.Context;
-using System.Text;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,16 +20,15 @@ namespace Infra.Data.Repositories.ItlSys
             return produto.Result;
         }
 
+        public Produto Atualizar(Produto produto)
+        {
+            this.Update(produto);
+            return produto;
+        }
+
+
         public Produto Cadastrar(Produto produto)
         {
-            var produtoDb = this.Buscar(produto.Codigo);
-            if (produtoDb != null)
-            {
-                produtoDb.AtualizarDados(produto.Codigo, produto.Descricao, produto.Categoria, produto.Tipo, produto.PrecoCusto, produto.PrecoVenda, produto.Fornecedor);
-                this.Update(produtoDb);
-                return produtoDb;
-            }
-
             this.Add(produto);
             return produto;
         }
@@ -43,11 +36,12 @@ namespace Infra.Data.Repositories.ItlSys
         public Produto Deletar(int produtoId)
         {
             Produto produto = this.Buscar(produtoId);
-            if (produto != null)
+            if (produto == null)
             {
-                this.Remove(produtoId);
+                return null;
             }
 
+            this.Remove(produto);
             return produto;
         }
     }

@@ -1,8 +1,6 @@
-﻿using Havan.Core;
-
-namespace Domain.Models
+﻿namespace Domain.Models
 {
-    public class Produto : Entity<int>
+    public class Produto : Entidade<int>
     {
         protected Produto() { }
         public void AtualizarDados(int codigo, string descricao, Categoria categoria, int tipo, int precoCusto, int precoVenda, Fornecedor fornecedor)

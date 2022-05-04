@@ -1,22 +1,23 @@
 ﻿using Application.Interfaces;
-using Havan.Logistica.Core.Controller;
-using Havan.Logistica.Core.Notifications;
 using Infra.CrossCutting.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
+using System.Net;
 
 namespace API.Controllers
 {
     [Route("Fornecedor")]
     [ApiController]
-    public class FornecedorController : MainController
+    public class FornecedorController : ControllerBase
     {
         private readonly IFornecedorAppService _appService;
+        private readonly ILogger<FornecedorController> _logger;
 
-        public FornecedorController(INotifier notifier, IFornecedorAppService appService) : base(notifier)
+        public FornecedorController(ILogger<FornecedorController> logger, IFornecedorAppService appService) 
         {
+            _logger = logger;
             _appService = appService;
         }
 
@@ -25,12 +26,12 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Buscar(fornecedorId));
+                return Ok(_appService.Buscar(fornecedorId));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -39,27 +40,40 @@ namespace API.Controllers
         {
             try
             {
-                return Response(_appService.Deletar(fornecedorId));
+                return Ok(_appService.Deletar(fornecedorId));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
 
+        [HttpPut, Route("")]
+        public IActionResult Atualizar([FromBody] FornecedorDto fornecedor)
+        {
+            try
+            {
+                return Ok(_appService.Atualizar(fornecedor));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
+            }
+        }
 
         [HttpPost, Route("")]
         public IActionResult Cadastrar([FromBody] FornecedorDto fornecedor)
         {
             try
             {
-                return Response(_appService.Cadastrar(fornecedor));
+                return Ok(_appService.Cadastrar(fornecedor));
             }
             catch (Exception e)
             {
-                Notify(e.InnerException?.Message ?? e.Message);
-                return Response();
+                _logger.LogError(e.InnerException?.Message ?? e.Message);
+                return Problem(e.InnerException?.Message ?? e.Message, null, (int)HttpStatusCode.InternalServerError);
             }
         }
     }

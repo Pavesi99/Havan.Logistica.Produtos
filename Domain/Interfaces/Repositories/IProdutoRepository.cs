@@ -1,16 +1,13 @@
-﻿using Domain.Enum;
-using Domain.Models;
-using Havan.Logistica.Core.Repository;
-using Infra.CrossCutting.Dto;
-using System;
-using System.Collections.Generic;
+﻿using Domain.Models;
 
-namespace Domain.Interfaces.NomeDaBase
+namespace Domain.Interfaces.Produto
 {
-    public interface IProdutoRepository : IRepository<Produto>
+    public interface IProdutoRepository : IRepository<Models.Produto>
     {
-        Produto Cadastrar(Produto produto);
-        Produto Buscar(int produtoId);
-        Produto Deletar(int produtoId);
+        Models.Produto Cadastrar(Models.Produto produto);
+        Models.Produto Atualizar(Models.Produto produto);
+
+        Models.Produto Buscar(int produtoId);
+        Models.Produto Deletar(int produtoId);
     }
 }
